@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Návrh redesignu – MŠ Studánka Pardubice</title>
+  <style>
+    :root {
+      --bg: #fffaf2;
+      --bg-soft: #f5efe3;
+      --primary: #416d54;
+      --primary-dark: #254936;
+      --accent: #e7a548;
+      --accent-soft: #ffe7b8;
+      --rose: #f3c6b8;
+      --blue: #d8ecf0;
+      --text: #26332b;
+      --muted: #66736b;
+      --white: #ffffff;
+      --shadow: 0 18px 45px rgba(38, 51, 43, 0.12);
+      --radius-lg: 28px;
+      --radius-md: 20px;
+      --radius-sm: 14px;
+      --max: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .topbar {
+      background: var(--primary-dark);
+      color: rgba(255, 255, 255, 0.92);
+      font-size: 0.92rem;
+      padding: 10px 20px;
+    }
+
+    .topbar-inner {
+      max-width: var(--max);
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(255, 250, 242, 0.86);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(65, 109, 84, 0.1);
+    }
+
+    .nav {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 18px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      color: var(--primary-dark);
+      letter-spacing: -0.02em;
+    }
+
+    .brand-mark {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--primary), #82a782);
+      color: var(--white);
+      box-shadow: 0 10px 24px rgba(65, 109, 84, 0.25);
+      font-size: 1.4rem;
+    }
+
+    .brand small {
+      display: block;
+      font-weight: 600;
+      color: var(--muted);
+      font-size: 0.82rem;
+      margin-top: -2px;
+    }
+
+    .menu {
+      display: flex;
+      gap: 22px;
+      align-items: center;
+      color: var(--primary-dark);
+      font-weight: 650;
+      font-size: 0.95rem;
+    }
+
+    .menu a {
+      opacity: 0.88;
+    }
+
+    .menu a:hover {
+      opacity: 1;
+      color: var(--accent);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      border-radius: 999px;
+      padding: 13px 20px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: var(--white);
+      box-shadow: 0 12px 25px rgba(65, 109, 84, 0.24);
+    }
+
+    .btn-light {
+      background: var(--white);
+      color: var(--primary-dark);
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 82px 20px 60px;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: -140px -120px auto auto;
+      width: 520px;
+      height: 520px;
+      background: radial-gradient(circle, var(--accent-soft), rgba(255, 231, 184, 0));
+      z-index: -1;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      left: -160px;
+      bottom: -180px;
+      width: 420px;
+      height: 420px;
+      background: radial-gradient(circle, var(--blue), rgba(216, 236, 240, 0));
+      z-index: -1;
+    }
+
+    .hero-inner {
+      max-width: var(--max);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.02fr 0.98fr;
+      align-items: center;
+      gap: 56px;
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(65, 109, 84, 0.1);
+      color: var(--primary-dark);
+      border: 1px solid rgba(65, 109, 84, 0.13);
+      border-radius: 999px;
+      padding: 9px 14px;
+      font-weight: 800;
+      font-size: 0.92rem;
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      font-size: clamp(2.45rem, 5vw, 5.15rem);
+      line-height: 0.98;
+      letter-spacing: -0.065em;
+      color: var(--primary-dark);
+      margin-bottom: 24px;
+    }
+
+    .hero-text {
+      font-size: 1.16rem;
+      color: var(--muted);
+      max-width: 620px;
+      margin-bottom: 30px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+
+    .trust-row {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      color: var(--primary-dark);
+      font-weight: 750;
+      font-size: 0.94rem;
+    }
+
+    .trust-row span {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hero-card {
+      background: var(--white);
+      border-radius: 36px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+
+    .image-mock {
+      min-height: 520px;
+      border-radius: 28px;
+      background:
+        linear-gradient(rgba(37, 73, 54, 0.08), rgba(37, 73, 54, 0.2)),
+        radial-gradient(circle at 25% 18%, #fff3c7, transparent 24%),
+        radial-gradient(circle at 77% 22%, #d8ecf0, transparent 20%),
+        linear-gradient(135deg, #cfe3cb, #f5d6c6 42%, #f6e6bb);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      padding: 26px;
+    }
+
+    .sun {
+      position: absolute;
+      top: 45px;
+      right: 55px;
+      width: 78px;
+      height: 78px;
+      border-radius: 50%;
+      background: #ffcf67;
+      box-shadow: 0 0 0 18px rgba(255, 207, 103, 0.22);
+    }
+
+    .hill {
+      position: absolute;
+      left: -20%;
+      right: -20%;
+      bottom: -18%;
+      height: 48%;
+      background: #416d54;
+      border-radius: 50% 50% 0 0;
+      opacity: 0.95;
+    }
+
+    .hill.two {
+      bottom: -25%;
+      left: 22%;
+      background: #739c72;
+      opacity: 0.88;
+    }
+
+    .kids-card {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.84);
+      backdrop-filter: blur(12px);
+      border-radius: 24px;
+      padding: 22px;
+      box-shadow: 0 14px 30px rgba(38, 51, 43, 0.12);
+    }
+
+    .kids-card strong {
+      display: block;
+      color: var(--primary-dark);
+      font-size: 1.35rem;
+      letter-spacing: -0.03em;
+      margin-bottom: 6px;
+    }
+
+
+    .brand-mark img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      display: block;
+    }
+
+    .photo-showcase {
+      min-height: 520px;
+      border-radius: 28px;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #e9f3df, #fff4d8);
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 14px;
+    }
+
+    .photo-main,
+    .photo-side {
+      position: relative;
+      overflow: hidden;
+      border-radius: 24px;
+      box-shadow: 0 16px 32px rgba(38, 51, 43, 0.14);
+      background: var(--white);
+    }
+
+    .photo-main img,
+    .photo-side img,
+    .class-photo img,
+    .story-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .photo-main {
+      min-height: 480px;
+    }
+
+    .photo-stack {
+      display: grid;
+      gap: 14px;
+    }
+
+    .photo-side {
+      min-height: 233px;
+    }
+
+    .photo-caption {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 18px;
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(12px);
+      border-radius: 18px;
+      padding: 14px 16px;
+      color: var(--primary-dark);
+      box-shadow: 0 12px 28px rgba(38, 51, 43, 0.12);
+    }
+
+    .photo-caption strong {
+      display: block;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+      margin-bottom: 2px;
+    }
+
+    .photo-caption span {
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 650;
+    }
+
+    .story-photo {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      min-height: 100%;
+      background: var(--bg);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(65, 109, 84, 0.08);
+      position: relative;
+    }
+
+    .story-photo::after {
+      content: "Přátelské a hravé prostředí";
+      position: absolute;
+      left: 20px;
+      bottom: 20px;
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(10px);
+      color: var(--primary-dark);
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-weight: 800;
+      font-size: 0.9rem;
+    }
+
+    .class-photo {
+      height: 185px;
+      border-radius: 22px;
+      overflow: hidden;
+      margin: -4px -4px 20px;
+      background: var(--bg-soft);
+      position: relative;
+      z-index: 1;
+      box-shadow: 0 14px 28px rgba(38, 51, 43, 0.1);
+    }
+
+    .class-card .badge,
+    .class-card h3,
+    .class-card .class-list {
+      position: relative;
+      z-index: 2;
+    }
+.floating-note {
+      position: absolute;
+      top: -24px;
+      right: 30px;
+      background: var(--primary-dark);
+      color: var(--white);
+      border-radius: 18px;
+      padding: 16px 18px;
+      max-width: 230px;
+      box-shadow: 0 18px 34px rgba(37, 73, 54, 0.23);
+      font-size: 0.95rem;
+      font-weight: 650;
+    }
+
+    section {
+      padding: 74px 20px;
+    }
+
+    .container {
+      max-width: var(--max);
+      margin: 0 auto;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 28px;
+      margin-bottom: 34px;
+    }
+
+    .section-head h2 {
+      color: var(--primary-dark);
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1;
+      letter-spacing: -0.055em;
+    }
+
+    .section-head p {
+      color: var(--muted);
+      max-width: 520px;
+    }
+
+    .about {
+      background: var(--white);
+      border-block: 1px solid rgba(65, 109, 84, 0.08);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 34px;
+      align-items: stretch;
+    }
+
+    .quote-card {
+      border-radius: var(--radius-lg);
+      padding: 34px;
+      background: var(--primary-dark);
+      color: var(--white);
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 40px;
+      box-shadow: var(--shadow);
+    }
+
+    .quote-card p {
+      font-size: 1.45rem;
+      line-height: 1.25;
+      letter-spacing: -0.03em;
+      font-weight: 750;
+    }
+
+    .quote-card small {
+      color: rgba(255, 255, 255, 0.76);
+      font-weight: 650;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .feature {
+      background: var(--bg);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      border: 1px solid rgba(65, 109, 84, 0.08);
+    }
+
+    .feature .icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: var(--accent-soft);
+      display: grid;
+      place-items: center;
+      margin-bottom: 14px;
+      font-size: 1.25rem;
+    }
+
+    .feature h3 {
+      color: var(--primary-dark);
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+
+    .feature p {
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .classes {
+      background: linear-gradient(180deg, var(--bg), #f8f2e8);
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .class-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: 0 12px 35px rgba(38, 51, 43, 0.08);
+      border: 1px solid rgba(65, 109, 84, 0.08);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .class-card::before {
+      content: "";
+      position: absolute;
+      top: -48px;
+      right: -48px;
+      width: 145px;
+      height: 145px;
+      border-radius: 50%;
+      background: var(--accent-soft);
+      opacity: 0.82;
+    }
+
+    .class-card:nth-child(2)::before {
+      background: var(--blue);
+    }
+
+    .class-card:nth-child(3)::before {
+      background: var(--rose);
+    }
+
+    .class-card h3 {
+      font-size: 1.55rem;
+      color: var(--primary-dark);
+      margin-bottom: 10px;
+      position: relative;
+    }
+
+    .badge {
+      display: inline-flex;
+      border-radius: 999px;
+      padding: 7px 11px;
+      background: rgba(65, 109, 84, 0.1);
+      color: var(--primary-dark);
+      font-size: 0.82rem;
+      font-weight: 800;
+      margin-bottom: 18px;
+    }
+
+    .class-list {
+      list-style: none;
+      display: grid;
+      gap: 12px;
+      color: var(--muted);
+    }
+
+    .class-list li {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .class-list li::before {
+      content: "✓";
+      color: var(--primary);
+      font-weight: 900;
+    }
+
+    .timeline {
+      background: var(--white);
+    }
+
+    .schedule {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .time-item {
+      border-radius: var(--radius-md);
+      padding: 20px 22px;
+      border: 1px solid rgba(65, 109, 84, 0.09);
+      background: var(--bg);
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .time {
+      color: var(--primary-dark);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+    }
+
+    .time-item p {
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .documents {
+      background: var(--primary-dark);
+      color: var(--white);
+    }
+
+    .documents .section-head h2,
+    .documents .section-head p {
+      color: var(--white);
+    }
+
+    .documents .section-head p {
+      opacity: 0.78;
+    }
+
+    .doc-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .doc {
+      background: rgba(255, 255, 255, 0.09);
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      border-radius: var(--radius-md);
+      padding: 22px;
+    }
+
+    .doc strong {
+      display: block;
+      font-size: 1.08rem;
+      margin-bottom: 8px;
+    }
+
+    .doc span {
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 0.95rem;
+    }
+
+    .contact {
+      background: linear-gradient(135deg, #fffaf2, #f4ead7);
+    }
+
+    .contact-card {
+      background: var(--white);
+      border-radius: 36px;
+      padding: 34px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .contact-info {
+      display: grid;
+      gap: 18px;
+    }
+
+    .contact-box {
+      border-radius: var(--radius-md);
+      background: var(--bg);
+      padding: 20px;
+      border: 1px solid rgba(65, 109, 84, 0.08);
+    }
+
+    .contact-box span {
+      color: var(--muted);
+      display: block;
+      font-size: 0.92rem;
+      margin-bottom: 4px;
+      font-weight: 650;
+    }
+
+    .contact-box strong {
+      color: var(--primary-dark);
+      font-size: 1.05rem;
+    }
+
+    .contact-cta {
+      border-radius: var(--radius-lg);
+      padding: 30px;
+      background:
+        radial-gradient(circle at 90% 10%, rgba(255, 231, 184, 0.9), transparent 35%),
+        linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: var(--white);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 34px;
+    }
+
+    .contact-cta h3 {
+      font-size: 2rem;
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+
+    footer {
+      background: #1f382c;
+      color: rgba(255, 255, 255, 0.76);
+      padding: 26px 20px;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 940px) {
+      .menu {
+        display: none;
+      }
+
+      .hero-inner,
+      .about-grid,
+      .contact-card {
+        grid-template-columns: 1fr;
+      }
+
+      .image-mock,
+      .photo-showcase {
+        min-height: 420px;
+      }
+
+      .photo-showcase {
+        grid-template-columns: 1fr;
+      }
+
+      .photo-main {
+        min-height: 320px;
+      }
+
+      .photo-side {
+        min-height: 210px;
+      }
+
+      .cards,
+      .doc-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .schedule {
+        grid-template-columns: 1fr;
+      }
+
+      .section-head {
+        display: block;
+      }
+
+      .section-head p {
+        margin-top: 14px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .topbar-inner {
+        display: block;
+      }
+
+      .topbar-inner span {
+        display: block;
+        margin-bottom: 4px;
+      }
+
+      .nav {
+        padding: 14px 16px;
+      }
+
+      .brand small {
+        display: none;
+      }
+
+      .hero {
+        padding-top: 46px;
+      }
+
+      .hero-actions {
+        display: grid;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+  
+    .brand-mark img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      display: block;
+    }
+
+    .photo-showcase {
+      min-height: 520px;
+      border-radius: 28px;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #e9f3df, #fff4d8);
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 14px;
+    }
+
+    .photo-main,
+    .photo-side {
+      position: relative;
+      overflow: hidden;
+      border-radius: 24px;
+      box-shadow: 0 16px 32px rgba(38, 51, 43, 0.14);
+      background: var(--white);
+    }
+
+    .photo-main img,
+    .photo-side img,
+    .class-photo img,
+    .story-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .photo-main {
+      min-height: 480px;
+    }
+
+    .photo-stack {
+      display: grid;
+      gap: 14px;
+    }
+
+    .photo-side {
+      min-height: 233px;
+    }
+
+    .photo-caption {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 18px;
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(12px);
+      border-radius: 18px;
+      padding: 14px 16px;
+      color: var(--primary-dark);
+      box-shadow: 0 12px 28px rgba(38, 51, 43, 0.12);
+    }
+
+    .photo-caption strong {
+      display: block;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+      margin-bottom: 2px;
+    }
+
+    .photo-caption span {
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 650;
+    }
+
+    .story-photo {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      min-height: 100%;
+      background: var(--bg);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(65, 109, 84, 0.08);
+      position: relative;
+    }
+
+    .story-photo::after {
+      content: "Přátelské a hravé prostředí";
+      position: absolute;
+      left: 20px;
+      bottom: 20px;
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(10px);
+      color: var(--primary-dark);
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-weight: 800;
+      font-size: 0.9rem;
+    }
+
+    .class-photo {
+      height: 185px;
+      border-radius: 22px;
+      overflow: hidden;
+      margin: -4px -4px 20px;
+      background: var(--bg-soft);
+      position: relative;
+      z-index: 1;
+      box-shadow: 0 14px 28px rgba(38, 51, 43, 0.1);
+    }
+
+    .class-card .badge,
+    .class-card h3,
+    .class-card .class-list {
+      position: relative;
+      z-index: 2;
+    }
+.floating-note {
+        position: static;
+        margin-bottom: 14px;
+        max-width: none;
+      }
+
+      .hero-card {
+        padding: 14px;
+      }
+
+      .image-mock,
+      .photo-showcase {
+        min-height: 360px;
+      }
+
+      .photo-main {
+        min-height: 280px;
+      }
+
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .time-item {
+        grid-template-columns: 1fr;
+      }
+
+      section {
+        padding: 56px 16px;
+      }
+
+      .contact-card {
+        padding: 20px;
+        border-radius: 26px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <span>Mateřská škola Studánka Pardubice z.s.</span>
+      <span>Kontakt: msstudanka@centrum.cz · 725 449 244</span>
+    </div>
+  </div>
+
+  <header>
+    <nav class="nav">
+      <a href="#" class="brand">
+        <span class="brand-mark"><img src="https://static.wixstatic.com/media/9d56c4_ed96f8c031234137b1e3fa9d968f70dc~mv2.png/v1/fill/w_121%2Ch_121%2Cal_c%2Cq_85%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/Black%20Circle%20with%20Utensils%20Restaurant%20Logo.png" alt="Logo MŠ Studánka"></span>
+        <span>
+          MŠ Studánka
+          <small>Školka zdravého dechu</small>
+        </span>
+      </a>
+
+      <div class="menu">
+        <a href="#o-nas">O školce</a>
+        <a href="#tridy">Třídy</a>
+        <a href="#den">Denní režim</a>
+        <a href="#dokumenty">Přihlášky</a>
+        <a href="#kontakt">Kontakt</a>
+      </div>
+
+      <a class="btn btn-primary" href="#kontakt">Domluvit návštěvu</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-inner">
+        <div>
+          <div class="kicker">🌿 Rodinná školka v Pardubicích</div>
+          <h1>Školka, která bude Vaše děti bavit.</h1>
+          <p class="hero-text">
+            Ve Studánce pomáháme dětem růst v prostředí plném důvěry, tvořivosti, přátelství a laskavého vedení.
+            Každé dítě vnímáme jako originál a dáváme mu prostor objevovat svět vlastním tempem.
+          </p>
+
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#tridy">Prohlédnout třídy</a>
+            <a class="btn btn-light" href="#dokumenty">Přihlášky a dokumenty</a>
+          </div>
+
+          <div class="trust-row">
+            <span>✓ Celoroční provoz</span>
+            <span>✓ 6:30–16:30</span>
+            <span>✓ Pro děti 3–6 let i mladší</span>
+          </div>
+        </div>
+
+        <div class="hero-card">
+          <div class="floating-note">„Jsme kamarádi, máme se rádi a pomáháme si.“</div>
+          <div class="photo-showcase">
+            <div class="photo-main">
+              <img src="https://images.pexels.com/photos/8613315/pexels-photo-8613315.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Děti při tvořivé aktivitě">
+              <div class="photo-caption">
+                <strong>Radost, hra a objevování</strong>
+                <span>Ukázka příjemné atmosféry moderní školky</span>
+              </div>
+            </div>
+            <div class="photo-stack">
+              <div class="photo-side">
+                <img src="https://images.pexels.com/photos/8535237/pexels-photo-8535237.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Dětské ručičky při tvoření">
+              </div>
+              <div class="photo-side">
+                <img src="https://images.pexels.com/photos/3933270/pexels-photo-3933270.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Hernička a prostředí školky">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="about" id="o-nas">
+      <div class="container">
+        <div class="section-head">
+          <h2>O školce</h2>
+          <p>
+            Návrh klade důraz na srozumitelnost pro rodiče, jemnou vizuální identitu a rychlý přístup k důležitým informacím.
+          </p>
+        </div>
+
+        <div class="about-grid">
+          <div class="story-photo">
+            <img src="https://images.pexels.com/photos/8613089/pexels-photo-8613089.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Skupina dětí ve školce">
+          </div>
+
+          <div class="feature-grid">
+            <div class="feature">
+              <div class="icon">🤝</div>
+              <h3>Individuální přístup</h3>
+              <p>Každé dítě je jiné, proto návrh webu zdůrazňuje osobní a laskavý přístup pedagogů.</p>
+            </div>
+            <div class="feature">
+              <div class="icon">🎨</div>
+              <h3>Tvořivost a emoce</h3>
+              <p>Web může lépe ukázat tvořivé aktivity, hudbu, pohyb, hru a prožitkové učení.</p>
+            </div>
+            <div class="feature">
+              <div class="icon">🌳</div>
+              <h3>Pobyt venku</h3>
+              <p>Důležitou součástí dne je zahrada, hřiště, procházky a zdravý přirozený pohyb.</p>
+            </div>
+            <div class="feature">
+              <div class="icon">📄</div>
+              <h3>Přehled pro rodiče</h3>
+              <p>Přihlášky, dokumenty, kontakty a informace o třídách jsou na jednom jasném místě.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="classes" id="tridy">
+      <div class="container">
+        <div class="section-head">
+          <h2>Naše třídy</h2>
+          <p>
+            Každá třída má vlastní kartu s fotografií, lokalitou, provozní dobou a základními informacemi, aby se rodič rychle zorientoval.
+          </p>
+        </div>
+
+        <div class="cards">
+          <article class="class-card">
+            <div class="class-photo">
+              <img src="https://images.pexels.com/photos/8613089/pexels-photo-8613089.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Děti ve školce">
+            </div>
+            <span class="badge">Pardubice</span>
+            <h3>Studánka</h3>
+            <ul class="class-list">
+              <li>Pod Břízkami 800, Pardubice</li>
+              <li>Provoz 6:30–16:30</li>
+              <li>Celoroční provoz</li>
+              <li>Příspěvek 4.500 Kč včetně celodenní stravy</li>
+            </ul>
+          </article>
+
+          <article class="class-card">
+            <div class="class-photo">
+              <img src="https://images.pexels.com/photos/8535237/pexels-photo-8535237.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Dětské ručičky při tvoření">
+            </div>
+            <span class="badge">Pardubice</span>
+            <h3>Vlaštovka</h3>
+            <ul class="class-list">
+              <li>Gorkého 2573, Pardubice</li>
+              <li>Provoz 6:30–16:30</li>
+              <li>Jasně uvedené informace pro rodiče</li>
+              <li>Prostor pro doplnění fotografií personálu</li>
+            </ul>
+          </article>
+
+          <article class="class-card">
+            <div class="class-photo">
+              <img src="https://images.pexels.com/photos/3933270/pexels-photo-3933270.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Dětská hernička">
+            </div>
+            <span class="badge">Chrudim</span>
+            <h3>Kaštánek</h3>
+            <ul class="class-list">
+              <li>Václavská 761, Chrudim</li>
+              <li>Provoz 6:30–16:30</li>
+              <li>Přehledný časový rámec dne</li>
+              <li>Možnost doplnit aktuality a fotogalerii</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="timeline" id="den">
+      <div class="container">
+        <div class="section-head">
+          <h2>Denní režim</h2>
+          <p>
+            Původní časový rámec dne je převedený do přehlednější vizuální podoby, kterou rodiče rychle pochopí i na mobilu.
+          </p>
+        </div>
+
+        <div class="schedule">
+          <div class="time-item"><div class="time">6:30–8:30</div><p>Příchod dětí, volná hra, individuální přístup</p></div>
+          <div class="time-item"><div class="time">8:30–8:45</div><p>Úklid hraček a pohybové hrátky</p></div>
+          <div class="time-item"><div class="time">8:45–9:00</div><p>Hygiena a svačina</p></div>
+          <div class="time-item"><div class="time">9:00–9:15</div><p>Didakticky zacílené činnosti</p></div>
+          <div class="time-item"><div class="time">9:15–11:15</div><p>Pobyt venku, zahrada, hřiště nebo procházka</p></div>
+          <div class="time-item"><div class="time">11:15–12:00</div><p>Hygiena a oběd</p></div>
+          <div class="time-item"><div class="time">12:00–14:00</div><p>Odpočinek s pohádkou</p></div>
+          <div class="time-item"><div class="time">14:30–16:00</div><p>Odpolední činnosti a odchod domů</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="documents" id="dokumenty">
+      <div class="container">
+        <div class="section-head">
+          <h2>Přihlášky a dokumenty</h2>
+          <p>
+            V redesignu by dokumenty byly umístěné přehledněji podle školního roku a jednotlivých tříd.
+          </p>
+        </div>
+
+        <div class="doc-grid">
+          <div class="doc">
+            <strong>Přihlášky 2026/2027</strong>
+            <span>Studánka · Vlaštovka · Kaštánek</span>
+          </div>
+          <div class="doc">
+            <strong>Školní řád</strong>
+            <span>Aktuální dokumenty pro rodiče na jednom místě</span>
+          </div>
+          <div class="doc">
+            <strong>Školní vzdělávací program</strong>
+            <span>Jednoduché stažení bez hledání v dlouhé stránce</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact" id="kontakt">
+      <div class="container">
+        <div class="section-head">
+          <h2>Kontakt</h2>
+          <p>Kontakty by měly být viditelné, přehledné a dostupné bez složitého hledání.</p>
+        </div>
+
+        <div class="contact-card">
+          <div class="contact-info">
+            <div class="contact-box">
+              <span>E-mail</span>
+              <strong>msstudanka@centrum.cz</strong>
+            </div>
+            <div class="contact-box">
+              <span>Ředitel školky</span>
+              <strong>Stanislav Kopečný ml. · 725 449 244</strong>
+            </div>
+            <div class="contact-box">
+              <span>Provozní záležitosti</span>
+              <strong>Stanislav Kopečný st. · 724 783 679</strong>
+            </div>
+            <div class="contact-box">
+              <span>Sídlo</span>
+              <strong>Pod Břízkami 800, Pardubice</strong>
+            </div>
+          </div>
+
+          <div class="contact-cta">
+            <div>
+              <h3>Přijďte se k nám podívat.</h3>
+              <p>Nejlepší je osobní návštěva a společná domluva podle potřeb dítěte i rodiny.</p>
+            </div>
+            <a class="btn btn-light" href="mailto:msstudanka@centrum.cz">Napsat e-mail</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Návrh redesignu – ukázkový koncept pro Mateřskou školu Studánka Pardubice z.s.
+  </footer>
+</body>
+</html>

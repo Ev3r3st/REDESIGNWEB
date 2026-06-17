@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Redesign návrhy – portfolio</title>
+  <style>
+    :root {
+      --bg: #f7f4ed;
+      --card: #ffffff;
+      --text: #1f2a24;
+      --muted: #68756e;
+      --primary: #2f6047;
+      --primary-dark: #1f4031;
+      --accent: #e7a548;
+      --soft: #fff2d6;
+      --shadow: 0 18px 50px rgba(31, 42, 36, 0.11);
+      --radius: 28px;
+      --max: 1120px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, #dceee2, transparent 34%),
+        radial-gradient(circle at top right, #fff0c8, transparent 28%),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    header {
+      padding: 34px 20px;
+    }
+
+    .nav {
+      max-width: var(--max);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 900;
+      color: var(--primary-dark);
+      letter-spacing: -0.03em;
+      font-size: 1.15rem;
+    }
+
+    .brand-mark {
+      width: 44px;
+      height: 44px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      background: var(--primary-dark);
+      color: white;
+      box-shadow: 0 12px 28px rgba(47, 96, 71, 0.22);
+    }
+
+    .pill {
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(47, 96, 71, 0.12);
+      color: var(--primary-dark);
+      border-radius: 999px;
+      padding: 10px 15px;
+      font-weight: 800;
+      font-size: 0.9rem;
+    }
+
+    main {
+      padding: 40px 20px 84px;
+    }
+
+    .hero {
+      max-width: var(--max);
+      margin: 0 auto 40px;
+      display: grid;
+      grid-template-columns: 1fr 0.85fr;
+      gap: 34px;
+      align-items: stretch;
+    }
+
+    .hero-card {
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(47, 96, 71, 0.10);
+      border-radius: 36px;
+      padding: clamp(30px, 5vw, 58px);
+      box-shadow: var(--shadow);
+    }
+
+    .kicker {
+      display: inline-flex;
+      border-radius: 999px;
+      padding: 9px 13px;
+      background: rgba(47, 96, 71, 0.10);
+      color: var(--primary-dark);
+      font-weight: 900;
+      margin-bottom: 24px;
+      font-size: 0.92rem;
+    }
+
+    h1 {
+      font-size: clamp(2.4rem, 6vw, 5.2rem);
+      line-height: 0.95;
+      letter-spacing: -0.07em;
+      color: var(--primary-dark);
+      margin-bottom: 22px;
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 1.1rem;
+      max-width: 650px;
+    }
+
+    .side-card {
+      border-radius: 36px;
+      padding: 28px;
+      background:
+        linear-gradient(rgba(31, 64, 49, 0.68), rgba(31, 64, 49, 0.68)),
+        url("https://images.pexels.com/photos/8613089/pexels-photo-8613089.jpeg?auto=compress&cs=tinysrgb&w=1200") center/cover;
+      color: white;
+      min-height: 360px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      justify-content: end;
+    }
+
+    .side-card strong {
+      display: block;
+      font-size: 1.7rem;
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+      margin-bottom: 10px;
+    }
+
+    .grid-wrap {
+      max-width: var(--max);
+      margin: 0 auto;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 20px;
+      margin: 0 0 20px;
+    }
+
+    .section-title h2 {
+      color: var(--primary-dark);
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      letter-spacing: -0.05em;
+      line-height: 1;
+    }
+
+    .section-title span {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .projects {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .project {
+      display: flex;
+      flex-direction: column;
+      min-height: 420px;
+      background: var(--card);
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid rgba(47, 96, 71, 0.10);
+      box-shadow: 0 14px 38px rgba(31, 42, 36, 0.08);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .project:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow);
+    }
+
+    .project-image {
+      height: 210px;
+      background:
+        linear-gradient(rgba(47, 96, 71, 0.02), rgba(47, 96, 71, 0.16)),
+        url("https://images.pexels.com/photos/8613315/pexels-photo-8613315.jpeg?auto=compress&cs=tinysrgb&w=1200") center/cover;
+    }
+
+    .project-body {
+      padding: 24px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .tag {
+      align-self: start;
+      border-radius: 999px;
+      padding: 7px 10px;
+      color: var(--primary-dark);
+      background: var(--soft);
+      font-size: 0.82rem;
+      font-weight: 900;
+    }
+
+    .project h3 {
+      color: var(--primary-dark);
+      font-size: 1.45rem;
+      line-height: 1.1;
+      letter-spacing: -0.04em;
+    }
+
+    .project p {
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .project .actions {
+      margin-top: auto;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding-top: 8px;
+    }
+
+    .btn {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 999px;
+      padding: 11px 15px;
+      font-weight: 900;
+      font-size: 0.92rem;
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn.secondary {
+      background: #eef4ef;
+      color: var(--primary-dark);
+    }
+
+    .empty-card {
+      min-height: 420px;
+      border-radius: var(--radius);
+      border: 2px dashed rgba(47, 96, 71, 0.20);
+      background: rgba(255, 255, 255, 0.55);
+      display: grid;
+      place-items: center;
+      padding: 28px;
+      text-align: center;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .empty-card strong {
+      display: block;
+      color: var(--primary-dark);
+      font-size: 1.35rem;
+      margin-bottom: 8px;
+      letter-spacing: -0.03em;
+    }
+
+    footer {
+      max-width: var(--max);
+      margin: 40px auto 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+      text-align: center;
+    }
+
+    @media (max-width: 960px) {
+      .hero,
+      .projects {
+        grid-template-columns: 1fr;
+      }
+
+      .side-card {
+        min-height: 280px;
+      }
+    }
+
+    @media (max-width: 580px) {
+      .nav,
+      .section-title {
+        display: block;
+      }
+
+      .pill {
+        display: inline-flex;
+        margin-top: 12px;
+      }
+
+      .hero-card {
+        border-radius: 26px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="nav">
+      <a href="/" class="brand">
+        <span class="brand-mark">↗</span>
+        <span>Redesign návrhy</span>
+      </a>
+      <span class="pill">Portfolio web pro klientské náhledy</span>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-card">
+        <span class="kicker">Webové návrhy na jednom místě</span>
+        <h1>Posílej klientům čisté odkazy místo příloh.</h1>
+        <p>
+          Tohle je jednoduchá prezentační stránka pro všechny redesign návrhy.
+          Každý klient má vlastní stránku, kterou můžeš poslat jako konkrétní veřejný odkaz.
+        </p>
+      </div>
+
+      <div class="side-card">
+        <strong>Jeden web, více návrhů.</strong>
+        <p>Stačí přidat další složku do /navrhy a doplnit kartu na tuto úvodní stránku.</p>
+      </div>
+    </section>
+
+    <section class="grid-wrap">
+      <div class="section-title">
+        <h2>Aktuální návrhy</h2>
+        <span>1 aktivní návrh</span>
+      </div>
+
+      <div class="projects">
+        <article class="project">
+          <div class="project-image"></div>
+          <div class="project-body">
+            <span class="tag">Mateřská škola</span>
+            <h3>MŠ Studánka Pardubice</h3>
+            <p>
+              Návrh modernější homepage s přehledem tříd, denním režimem,
+              přihláškami, dokumenty a kontakty.
+            </p>
+            <div class="actions">
+              <a class="btn" href="/navrhy/ms-studanka/">Otevřít návrh</a>
+              <a class="btn secondary" href="/navrhy/ms-studanka/" target="_blank" rel="noreferrer">Otevřít v novém okně</a>
+            </div>
+          </div>
+        </article>
+
+        <div class="empty-card">
+          <div>
+            <strong>Další návrh</strong>
+            <p>Sem můžeš přidat další klientský redesign.</p>
+          </div>
+        </div>
+
+        <div class="empty-card">
+          <div>
+            <strong>Další návrh</strong>
+            <p>Například restaurace, kadeřnictví, školka, firma nebo e-shop.</p>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        Tip: klientům posílej přímo odkaz na konkrétní návrh, například /navrhy/ms-studanka/
+      </footer>
+    </section>
+  </main>
+</body>
+</html>
