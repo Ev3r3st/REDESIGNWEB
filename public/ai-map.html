@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Mapa přínosu AI pro VUCH</title>
+  <style>
+    body{font-family:Arial,Helvetica,sans-serif;margin:16px}
+    .card{border:1px solid #ddd;padding:12px;margin:8px 0;border-radius:8px}
+    label{display:block;margin-top:8px}
+    input,select{width:100%;padding:8px;margin-top:4px}
+    .row{display:flex;gap:12px}
+    .col{flex:1}
+    #results{margin-top:12px}
+  </style>
+</head>
+<body>
+<h1>Martine, kde může AI ve VUCH přinést nejrychlejší výsledek?</h1>
+<p>Zadejte několik provozních údajů a během dvou minut získáte orientační odhad úspory a návrh prvního AI pilotu.</p>
+<div class="card">
+  <form id="form">
+    <div class="row">
+      <div class="col">
+        <label>Počet požadavků zákaznické podpory za měsíc</label>
+        <input id="supportCount" type="number" value="500" />
+        <label>Průměrný čas vyřízení jednoho požadavku v minutách</label>
+        <input id="supportTime" type="number" value="15" />
+        <label>Počet hodin týdně věnovaných ruční administrativě</label>
+        <input id="adminWeekly" type="number" value="40" />
+      </div>
+      <div class="col">
+        <label>Počet hodin měsíčně věnovaných reportingu</label>
+        <input id="reportMonthly" type="number" value="30" />
+        <label>Průměrný interní náklad jedné hodiny práce v Kč</label>
+        <input id="hourCost" type="number" value="400" />
+        <label>Oblast největší překážky</label>
+        <select id="area">
+          <option>zákaznická podpora</option>
+          <option>objednávky a doprava</option>
+          <option>finance a reporting</option>
+          <option>marketing a lokalizace</option>
+          <option>propojení systémů</option>
+          <option>jiná oblast</option>
+        </select>
+      </div>
+    </div>
+    <div style="margin-top:12px">
+      <button id="calc" type="button">Spočítat orientačně</button>
+      <button id="save" type="button">Uložit a sdílet</button>
+    </div>
+  </form>
+  <div id="results"></div>
+</div>
+
+<div class="card"><h3>Jak počítáme</h3>
+<p>Modelové předpoklady: 35% podpory automatizovatelné, 30% administrativy, 40% reportingu. Tyto hodnoty můžete upravit v kódu.</p>
+</div>
+
+<script>
+function upd(){
+  const supportCount=Number(document.getElementById('supportCount').value||0);
+  const supportTime=Number(document.getElementById('supportTime').value||0);
+  const adminWeekly=Number(document.getElementById('adminWeekly').value||0);
+  const reportMonthly=Number(document.getElementById('reportMonthly').value||0);
+  const hourCost=Number(document.getElementById('hourCost').value||0);
+
+  const supportHours = supportCount * supportTime / 60;
+  const supportAuto = supportHours * 0.35;
+  const adminMonthly = adminWeekly * 4.33;
+  const adminAuto = adminMonthly * 0.30;
+  const reportAuto = reportMonthly * 0.40;
+  const totalSaved = supportAuto + adminAuto + reportAuto;
+  const monthlySavings = totalSaved * hourCost;
+  const annualSavings = monthlySavings * 12;
+
+  const results = document.getElementById('results');
+  results.innerHTML = `
+    <div class="card"><strong>Ušetřené hodiny / měsíc:</strong> ${totalSaved.toFixed(1)}</div>
+    <div class="card"><strong>Měsíční úspora:</strong> ${monthlySavings.toLocaleString()} Kč</div>
+    <div class="card"><strong>Roční úspora (orientační):</strong> ${annualSavings.toLocaleString()} Kč</div>
+    <div class="card"><strong>Rozdělení:</strong>
+      <div>Podpora: ${supportAuto.toFixed(1)} h</div>
+      <div>Administrativa: ${adminAuto.toFixed(1)} h</div>
+      <div>Reporting: ${reportAuto.toFixed(1)} h</div>
+    </div>
+  `;
+}
+
+document.getElementById('calc').addEventListener('click', upd);
+['supportCount','supportTime','adminWeekly','reportMonthly','hourCost'].forEach(id=>{
+  document.getElementById(id).addEventListener('input', upd);
+});
+
+document.getElementById('save').addEventListener('click', async ()=>{
+  const payload = {
+    title: 'Mapa přínosu AI pro VUCH',
+    owner: 'VUCH',
+    content: {
+      supportCount: document.getElementById('supportCount').value,
+      supportTime: document.getElementById('supportTime').value,
+      adminWeekly: document.getElementById('adminWeekly').value,
+      reportMonthly: document.getElementById('reportMonthly').value,
+      hourCost: document.getElementById('hourCost').value,
+      area: document.getElementById('area').value
+    }
+  };
+  const res = await fetch('/api/documents', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+  const j = await res.json();
+  alert('Dokument uložen. Veřejný odkaz: ' + window.location.origin + j.url);
+});
+
+upd();
+</script>
+
+</body>
+</html>
