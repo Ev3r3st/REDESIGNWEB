@@ -1,4 +1,14 @@
 {
   "cleanUrls": true,
-  "trailingSlash": true
+  "trailingSlash": true,
+  "rewrites": [
+    {
+      "source": "/projekty/vuch-ai-mapa",
+      "destination": "/projekty/vuch-ai-mapa/index.html"
+    },
+    {
+      "source": "/projekty/vuch-ai-mapa/",
+      "destination": "/projekty/vuch-ai-mapa/index.html"
+    }
+  ]
 }
